@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reality Dashboard | Praha 3, 4, 10, 12</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-indigo-600 rounded-lg font-bold text-xl">🏢</div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight">Reality Dashboard</h1>
+          <p class="text-xs text-slate-400">Přehled novostaveb: Praha 3, 4, 10, 12</p>
+        </div>
+      </div>
+
+      <!-- Vyhledávání a Filtry -->
+      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+         type="text" id="searchInput" placeholder="Hledat projekt nebo developera..." 
+               class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm w-full md:w-64 focus:outline-none focus:border-indigo-500">
+        
+        <select id="locationFilter" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-500">
+          <option value="ALL">Všechny lokality</option>
+          <option value="Praha 3">Praha 3</option>
+          <option value="Praha 4">Praha 4</option>
+          <option value="Praha 10">Praha 10</option>
+          <option value="Praha 12">Praha 12</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hlavní obsah -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-lg font-semibold text-slate-300">Nalezené projekty (<span id="projectCount">0</span>)</h2>
+      <span class="text-xs text-slate-500" id="lastUpdated">Aktualiáno: Dnes</span>
+    </div>
+
+    <!-- Mřížka karet -->
+    <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Sem se dynamicky načtou kachle -->
+    </div>
+  </main>
+
+  <script>
+    let projectsData = [];
+
+    async function loadData() {
+      try {
+        const response = await fetch('data/projects.json');
+        const json = await response.json();
+        projectsData = json.data || [];
+        renderProjects(projectsData);
+      } catch (err) {
+        console.error('Chyba při načítání dat:', err);
+        document.getElementById('projectsGrid').innerHTML = '<p class="text-red-400 col-span-full">Chyba při načítání dat z JSONu.</p>';
+      }
+    }
+
+    function renderProjects(items) {
+      const grid = document.getElementById('projectsGrid');
+      document.getElementById('projectCount').innerText = items.length;
+
+      if (items.length === 0) {
+        grid.innerHTML = '<p class="text-slate-500 col-span-full text-center py-12">Žádné projekdanému filtru.</p>';
+        return;
+      }
+
+      grid.innerHTML = items.map(p => `
+        <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-5 hover:border-indigo-500/50 transition duration-200 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start gap-2 mb-2">
+              <span class="px-2 py-0.5 text-xs font-semibold rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                ${p.location}
+              </span>
+              <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                ${p.status || 'V prodeji'}
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-100 mb-1">${p.title}</h3>
+            <p class="text-xs text-slate-400 mb-4">Developer: <span class="text-slate-200">${p.developer || 'Nespecifikováno'}</span></p>
+          </div>
+
+          <div class="border-t border-slate-700/50 pt-3 mt-2 flejustify-between items-center text-xs text-slate-400">
+            <span>Jednotky: <strong class="text-slate-200">${p.units || 'N/A'}</strong></span>
+            <a href="${p.url}" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1">
+              Detail ↗
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterData() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const loc = document.getElementById('locationFilter').value;
+
+      const filtered = projectsData.filter(p => {
+        const matchesSearch = p.title.toLowerCase().includes(search) || (p.developer && p.developer.toLowerCase().includes(search));
+        const matchesLoc = loc === 'ALL' || p.location === loc;
+        return matchesSearch && matchesLoc;
+      });
+
+      renderProjects(filtered);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', filterData);
+    document.getElementById('locationFilter.addEventListener('change', filterData);
+
+    loadData();
+  </script>
+</body>
+</html>

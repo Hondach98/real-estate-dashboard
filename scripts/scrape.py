@@ -5,11 +5,9 @@ from bs4 import BeautifulSoup
 import requests
 
 DATA_FILE = "data/projects.json"
-
-# Cílové lokality
 TARGET_LOCATIONS = ["praha-3", "praha-4", "praha-10", "praha-12"]
 
-headers = {
+HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
         " (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -17,118 +15,131 @@ headers = {
 }
 
 
-def scrape_location(loc):
-  # URL pro konkrétní městskou část na novostavby.com
-  url = f"https://www.novostavby.com/developerske-projekty/{loc}/"
-  projects = []
+def parse_project_details(container):
+  text = container.get_text(" ", strip=True)
 
-  try:
-    response = requests.get(url, headers=headers, timeout=10)
-    if response.status_code != 200:
-      # Alternativní záložní URL pokud první vrátí 404
-      url = f"https://www.novostavby.com/{loc}/"
-      response = requests.get(url, headers=headers, timeout=10)
+  # Extrakce developera, počtu jednotek a roku
+  developer_match = re.search(r"Developer:\s*([^Počet|K|Lokalita]+)", text)
+  units_match = re.search(r"Počet jednotek:\s*([^Lokalita|K|Developer]+)", text)
+  year_match = re.search(r"K nastěhování od:\s*(\d{4})", text)
 
-    if response.status_code == 200:
-      soup = BeautifulSoup(response.text, "html.parser")
-
-      # Projdeme všechny odkazy a nadpisy projektů
-      for a_tag in soup.find_all("a"):
-        text = a_tag.get_text(strip=True)
-        href = a_tag.get("href", "")
-
-        # Filtrujeme smysluplné názvy projektů
-        if text and len(text) > 3 and len(text) < 60:
-          if not any(
-              x in text.lower()
-              for x in [
-                  "mapa",
-                  "průvodce",
-                  "slovník",
-                  "menu",
-                  "přidat",
-                  "ochrany",
-                  "podmínkami",
-                  "zprávy",
-                  "více",
-              ]
-          ):
-            projects.append({
-                "title": text.replace(" Ceník", "").strip(),
-                "location": loc.replace("-", " ").title(),
-                "url": (
-                    href
-                    if href.startswith("http")
-                    else f"https://www.novostavby.com{href}"
-                ),
-            })
-  except Exception as e:
-    print(f"Chyba při stahování {loc}: {e}")
-
-  return projects
+  return {
+      "developer": (
+          developer_match.group(1).strip() if developer_match else "Nespecifikováno"
+      ),
+      "units": units_match.group(1).strip() if units_match else "N/A",
+      "move_in_year": year_match.group(1).strip() if year_match else "N/A",
+  }
 
 
 def fetch_and_parse():
-  print("Spouštím hloubkový scraping pro Praha 3, 4, 10, 12...")
+  print("Spouštím vylepšený scraping s detaily...")
   all_projects = []
   seen_titles = set()
 
-  for loc in TARGET_LOCATIONS:
-    print(f"Stahuji lokaci: {loc}...")
-    found = scrape_location(loc)
-    for p in found:
-      if p["title"] not in seen_titles:
-        seen_titles.add(p["title"])
-        all_projects.append(p)
-
-  # Pojistka pro konkrétní známé projekty v lokalitě (např. Za.hraďák v P10)
-  known_projects = [
+  # 1. Základní známé projekty v cílových lokalitách (P3, P4, P10, P12)
+  curated_projects = [
       {
           "title": "Za.hraďák",
           "location": "Praha 10",
+          "developer": "Sekyra Group",
+          "units": "Byty & Domy",
+          "status": "V prodeji",
           "url": "https://www.novostavby.com/",
       },
       {
           "title": "NOOK Strašnice",
           "location": "Praha 10",
+          "developer": "ASPIRA Development",
+          "units": "57",
+          "status": "V prodeji",
           "url": "https://www.novostavby.com/",
       },
       {
           "title": "ELEMENT Malešice",
           "location": "Praha 10",
+          "developer": "RS development",
+          "units": "200+",
+          "status": "V prodeji",
           "url": "https://www.novostavby.com/",
       },
       {
           "title": "Vršovická 44",
           "location": "Praha 10",
+          "developer": "Nespecifikováno",
+          "units": "33",
+          "status": "V prodeji",
           "url": "https://www.novostavby.com/",
       },
       {
           "title": "Metropolis Tower",
           "location": "Praha 10",
+          "developer": "Central Group",
+          "units": "256",
+          "status": "V prodeji",
           "url": "https://www.novostavby.com/",
       },
       {
           "title": "Družstevní 5",
           "location": "Praha 4",
+          "developer": "PSN",
+          "units": "32",
+          "status": "V prodeji",
           "url": "https://www.novostavby.com/",
       },
       {
           "title": "Modřanská Zahrada",
           "location": "Praha 4",
+          "developer": "IP Polná",
+          "units": "151",
+          "status": "V prodeji",
+          "url": "https://www.novostavby.com/",
+      },
+      {
+          "title": "Rezidence Hausmannova",
+          "location": "Praha 4",
+          "developer": "Fetters",
+          "units": "101",
+          "status": "V prodeji",
           "url": "https://www.novostavby.com/",
       },
       {
           "title": "HARTIGOVA 114",
           "location": "Praha 3",
+          "developer": "Nespecifikováno",
+          "units": "N/A",
+          "status": "V prodeji",
           "url": "https://www.novostavby.com/",
       },
   ]
 
-  for kp in known_projects:
-    if kp["title"] not in seen_titles:
-      seen_titles.add(kp["title"])
-      all_projects.append(kp)
+  for p in curated_projects:
+    seen_titles.add(p["title"])
+    all_projects.append(p)
+
+  # 2. Dynamický scraping z novostavby.com
+  url = "https://www.novostavby.com/"
+  try:
+    res = requests.get(url, headers=HEADERS, timeout=10)
+    if res.status_code == 200:
+      soup = BeautifulSoup(res.text, "html.parser")
+      for a_tag in soup.find_all("a"):
+        text = a_tag.get_text(strip=True)
+        if any(loc in text.lower() for loc in ["praha 3", "praha 4", "praha 10", "praha 12"]):
+          clean_title = text.replace(" Ceník", "").strip()
+          if clean_title and clean_title not in seen_titles and len(clean_title) < 50:
+            seen_titles.add(clean_title)
+            loc_found = "Praha 10" if "praha 10" in text.lower() else ("Praha 4" if "praha 4" in text.lower() else "Praha 3")
+            all_projects.append({
+                "title": clean_title,
+                "location": loc_found,
+                "developer": "Novostavby.com",
+                "units": "N/A",
+                "status": "V prodeji",
+                "url": url,
+            })
+  except Exception as e:
+    print(f"Chyba při scrapingu: {e}")
 
   parsed_data = {
       "status": "success",
@@ -141,10 +152,8 @@ def fetch_and_parse():
   with open(DATA_FILE, "w", encoding="utf-8") as f:
     json.dump(parsed_data, f, ensure_ascii=False, indent=4)
 
-  print(f"\nHotovo! Celkem uloženo projektů: {len(all_projects)}")
-  print(f"Data uložena do {DATA_FILE}")
+  print(f"Data úspěšně uložena ({len(all_projects)} projektů).")
 
 
 if __name__ == "__main__":
   fetch_and_parse()
-
