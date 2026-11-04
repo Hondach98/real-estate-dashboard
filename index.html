@@ -21,19 +21,21 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen">
 
-  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+  <!-- Top Navigation / Filters Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col lg:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3">
-        <div class="p-2 bg-brand-600 rounded-lg text-white font-black text-xl tracking-wider">RE</div>
+        <div class="p-2.5 bg-brand-600 rounded-xl text-white font-black text-xl tracking-wider shadow">RE</div>
         <div>
-          <h1 class="text-lg font-bold tracking-tight text-white">Prague Housing Intelligence</h1>
-          <p class="text-xs text-slate-400">Monitoring novostaveb: Praha 3 • Praha 4 • Praha 10 • Praha 12</p>
+          <h1 class="text-base font-bold tracking-tight text-white">Prague Housing Intelligence</h1>
+          <p class="text-xs text-slate-400">Analytický přehled novostaveb: Praha 3, 4, 10, 12</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 w-full md:w-auto">
-        <input type="text" id="searchInput" placeholder="Hledat projekt, developer..." 
-               class="bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-xs w-full md:w-64 focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-200">
+      <!-- Interaktivní filtry -->
+      <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+        <input type="text" id="searchInput" placeholder="Hledat projekt, developer, čtvrť..." 
+               class="bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-xs w-full sm:w-56 focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-200">
         
         <select id="locationFilter" class="bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-200">
           <option value="ALL">Všechny městské části</option>
@@ -42,6 +44,14 @@
           <option value="Praha 10">Praha 10</option>
           <option value="Praha 12">Praha 12</option>
         </select>
+
+        <select id="layoutFilter" class="bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-200">
+          <option value="ALL">Všechny dispozice</option>
+          <option value="1+kk">1+kk</option>
+          <option value="2+kk">2+kk</option>
+          <option value="3+kk">3+kk</option>
+          <option value="4+kk">4+kk</option>
+        </select>
       </div>
     </div>
   </header>
@@ -49,54 +59,57 @@
   <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
 
     <!-- KPI Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl shadow-sm">
         <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Průměrná cena / m²</p>
         <h3 class="text-2xl font-extrabold text-white mt-1" id="kpiAvgSqm">— Kč</h3>
-        <p class="text-[11px] text-emerald-400 mt-2 font-medium">Průměr sledovaných MČ</p>
+        <p class="text-[11px] text-emerald-400 mt-2 font-medium">Vážený průměr aktuálního filtru</p>
       </div>
 
-      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
+      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl shadow-sm">
         <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Aktivní projekty</p>
         <h3 class="text-2xl font-extrabold text-white mt-1" id="kpiProjectCount">0</h3>
-        <p class="text-[11px] text-slate-400 mt-2">Sledované projekty</p>
+        <p class="text-[11px] text-slate-400 mt-2">Sledované developerské záměry</p>
       </div>
 
-      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
+      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl shadow-sm">
         <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Volné jednotky</p>
         <h3 class="text-2xl font-extrabold text-brand-500 mt-1" id="kpiAvailableUnits">0</h3>
-        <p class="text-[11px] text-slate-400 mt-2">Aktuálně k dispozici</p>
+        <p class="text-[11px] text-slate-400 mt-2">Zásoba bytů na trhu</p>
       </div>
 
-      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
-        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Min. Vstupní cena</p>
+      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl shadow-sm">
+        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Nejnižší vstupní cena</p>
         <h3 class="text-2xl font-extrabold text-white mt-1" id="kpiMinPrice">— mil. Kč</h3>
-        <p class="text-[11px] text-slate-400 mt-2">Nejdostupnější byt</p>
+        <p class="text-[11px] text-slate-400 mt-2">Startovací jednotka</p>
       </div>
     </div>
 
-    <!-- Charts -->
+    <!-- Charts Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-xl">
-        <h3 class="text-sm font-semibold text-slate-200 mb-4">Průměrná cena Kč/m² podle MČ</h3>
+      <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-xl shadow-sm">
+        <h3 class="text-sm font-semibold text-slate-200 mb-4">Srovnání průměrných cen Kč/m² podle MČ</h3>
         <div class="h-64">
           <canvas id="priceChart"></canvas>
         </div>
       </div>
 
-      <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-xl">
-        <h3 class="text-sm font-semibold text-slate-200 mb-4">Počet volných jednotek v projektech</h3>
+      <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-xl shadow-sm">
+        <h3 class="text-sm font-semibold text-slate-200 mb-4">Objem volných jednotek podle lokalit</h3>
         <div class="h-64">
           <canvas id="unitsChart"></canvas>
         </div>
       </div>
     </div>
 
-    <!-- Table -->
-    <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden">
-      <div class="p-5 border-b border-slate-800">
-        <h2 class="text-base font-bold text-white">Srovnávací matice developerských projektů</h2>
-        <p class="text-xs text-slate-400">Kliknutím na záhlaví sloupce seřadíte data</p>
+    <!-- Interactive Data Table -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+      <div class="p-5 border-b border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div>
+          <h2 class="text-base font-bold text-white">Srovnávací matice projektů</h2>
+          <p class="text-xs text-slate-400">Kliknutím na záhlaví sloupců lze data třídit</p>
+        </div>
+        <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700" id="tableCountBadge">Zobrazeno 0 projektů</span>
       </div>
 
       <div class="overflow-x-auto">
@@ -104,13 +117,14 @@
           <thead class="bg-slate-950 text-slate-400 uppercase tracking-wider border-b border-slate-800 select-none">
             <tr>
               <th class="p-4 font-semibold cursor-pointer hover:text-white" onclick="sortTable('title')">Projekt ↕</th>
-              <th class="p-4 font-semibold cursor-pointer hover:text-white" onclick="sortTable('location')">Lokalita ↕</th>
+              <th class="p-4 font-semibold cursor-pointer hover:text-white" onclick="sortTable('location')">MČ / Čtvrť ↕</th>
               <th class="p-4 font-semibold cursor-pointer hover:text-white" onclick="sortTable('developer')">Developer ↕</th>
               <th class="p-4 font-semibold cursor-pointer hover:text-white text-right" onclick="sortTable('avg_sqm_price')">Cena / m² ↕</th>
-              <th class="p-4 font-semibold cursor-pointer hover:text-white text-right" onclick="sortTable('min_price')">Od (Kč) ↕</th>
+              <th class="p-4 font-semibold cursor-pointer hover:text-white text-right" onclick="sortTable('min_price')">Cena od ↕</th>
+              <th class="p-4 font-semibold text-center">Dispozice</th>
               <th class="p-4 font-semibold cursor-pointer hover:text-white text-center" onclick="sortTable('available_units')">Volné / Celkem ↕</th>
-              <th class="p-4 font-semibold text-center">Dokončení</th>
-              <th class="p-4 font-semibold text-right">Odkaz</th>
+              <th class="p-4 font-semibold text-center cursor-pointer hover:text-white" onclick="sortTable('completion_year')">Dokončení ↕</th>
+              <th class="p-4 font-semibold text-right">Detail</th>
             </tr>
           </thead>
           <tbody id="tableBody" class="divide-y divide-slate-800/60 font-mono">
@@ -148,7 +162,14 @@
     }
 
     function updateKPIs() {
-      if (filteredData.length === 0) return;
+      if (filteredData.length === 0) {
+        document.getElementById('kpiAvgSqm').innerText = '0 Kč';
+        document.getElementById('kpiProjectCount').innerText = '0';
+        document.getElementById('kpiAvailableUnits').innerText = '0';
+        document.getElementById('kpiMinPrice').innerText = '0 mil. Kč';
+        return;
+      }
+      
       const totalSqm = filteredData.reduce((acc, p) => acc + p.avg_sqm_price, 0);
       const avgSqm = Math.round(totalSqm / filteredData.length);
       const totalUnits = filteredData.reduce((acc, p) => acc + p.available_units, 0);
@@ -158,6 +179,7 @@
       document.getElementById('kpiProjectCount').innerText = filteredData.length;
       document.getElementById('kpiAvailableUnits').innerText = totalUnits;
       document.getElementById('kpiMinPrice').innerText = (minPrice / 1000000).toFixed(2) + ' mil. Kč';
+      document.getElementById('tableCountBadge').innerText = `Zobrazeno ${filteredData.length} projektů`;
     }
 
     function renderTable() {
@@ -170,15 +192,26 @@
 
       tbody.innerHTML = filteredData.map(p => `
         <tr class="hover:bg-slate-800/40 transition">
-          <td class="p-4 font-bold text-white font-sans">${p.title}</td>
-          <td class="p-4 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-slate-800 text-slate-300 border border-slate-700">${p.location}</span></td>
+          <td class="p-4 font-bold text-white font-sans">
+            ${p.title}
+            <div class="text-[10px] text-slate-500 font-normal">${p.status}</div>
+          </td>
+          <td class="p-4 font-sans">
+            <span class="px-2 py-0.5 rounded text-[11px] bg-slate-800 text-slate-300 border border-slate-700">${p.location}</span>
+            <div class="text-[10px] text-slate-400 mt-0.5">${p.subdistrict}</div>
+          </td>
           <td class="p-4 font-sans text-slate-400">${p.developer}</td>
           <td class="p-4 text-right font-bold text-brand-500">${p.avg_sqm_price.toLocaleString('cs-CZ')} Kč</td>
-          <td class="p-4 text-right">${(p.min_price / 1000000).toFixed(2)} mil.</td>
+          <td class="p-4 text-right">${(p.min_price / 1000000).toFixed(2)} mil. Kč</td>
+          <td class="p-4 text-center font-sans">
+            <div class="flex flex-wrap gap-1 justify-center">
+              ${p.layouts.map(l => `<span class="bg-slate-800 text-slate-300 text-[10px] px-1.5 py-0.5 rounded">${l}</span>`).join('')}
+            </div>
+          </td>
           <td class="p-4 text-center"><span class="text-emerald-400 font-bold">${p.available_units}</span> / ${p.total_units}</td>
           <td class="p-4 text-center font-sans text-slate-400">${p.completion_year}</td>
           <td class="p-4 text-right font-sans">
-            <a href="${p.url}" target="_blank" class="text-brand-500 hover:text-brand-400 font-medium">Detail ↗</a>
+            <a href="${p.url}" target="_blank" class="text-brand-500 hover:text-brand-400 font-medium">Otevřít ↗</a>
           </td>
         </tr>
       `).join('');
@@ -235,19 +268,25 @@
     function applyFilters() {
       const search = document.getElementById('searchInput').value.toLowerCase();
       const loc = document.getElementById('locationFilter').value;
+      const layout = document.getElementById('layoutFilter').value;
+
       filteredData = rawData.filter(p => {
-        const matchSearch = p.title.toLowerCase().includes(search) || p.developer.toLowerCase().includes(search);
+        const matchSearch = p.title.toLowerCase().includes(search) || 
+                            p.developer.toLowerCase().includes(search) || 
+                            p.subdistrict.toLowerCase().includes(search);
         const matchLoc = loc === 'ALL' || p.location === loc;
-        return matchSearch && matchLoc;
+        const matchLayout = layout === 'ALL' || p.layouts.includes(layout);
+        return matchSearch && matchLoc && matchLayout;
       });
+
       renderDashboard();
     }
 
     document.getElementById('searchInput').addEventListener('input', applyFilters);
     document.getElementById('locationFilter').addEventListener('change', applyFilters);
+    document.getElementById('layoutFilter').addEventListener('change', applyFilters);
 
     init();
   </script>
 </body>
 </html>
-

@@ -6,13 +6,177 @@
         "Praha 10",
         "Praha 12"
     ],
-    "items_found": 10,
+    "items_found": 16,
     "data": [
+        {
+            "id": "p3-hartigova",
+            "title": "HARTIGOVA 114",
+            "location": "Praha 3",
+            "subdistrict": "Žižkov",
+            "developer": "Crestyl",
+            "status": "V prodeji",
+            "completion_year": 2027,
+            "avg_sqm_price": 169000,
+            "min_price": 6800000,
+            "max_price": 22500000,
+            "total_units": 84,
+            "available_units": 29,
+            "layouts": [
+                "1+kk",
+                "2+kk",
+                "3+kk",
+                "4+kk"
+            ],
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "id": "p3-zizkov3",
+            "title": "Žižkov 3.0",
+            "location": "Praha 3",
+            "subdistrict": "Žižkov",
+            "developer": "Central Group",
+            "status": "V prodeji",
+            "completion_year": 2028,
+            "avg_sqm_price": 162000,
+            "min_price": 6200000,
+            "max_price": 19800000,
+            "total_units": 320,
+            "available_units": 94,
+            "layouts": [
+                "1+kk",
+                "2+kk",
+                "3+kk",
+                "4+kk"
+            ],
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "id": "p3-brique",
+            "title": "BRIQUE Žižkov",
+            "location": "Praha 3",
+            "subdistrict": "Žižkov",
+            "developer": "Penta Real Estate",
+            "status": "V přípravě",
+            "completion_year": 2029,
+            "avg_sqm_price": 174000,
+            "min_price": 7100000,
+            "max_price": 24000000,
+            "total_units": 110,
+            "available_units": 55,
+            "layouts": [
+                "1+kk",
+                "2+kk",
+                "3+kk"
+            ],
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "id": "p4-druzstevni",
+            "title": "Družstevní 5",
+            "location": "Praha 4",
+            "subdistrict": "Nusle",
+            "developer": "PSN",
+            "status": "V prodeji",
+            "completion_year": 2028,
+            "avg_sqm_price": 152000,
+            "min_price": 5800000,
+            "max_price": 16200000,
+            "total_units": 32,
+            "available_units": 14,
+            "layouts": [
+                "1+kk",
+                "2+kk",
+                "3+kk"
+            ],
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "id": "p4-modranska",
+            "title": "Modřanská Zahrada",
+            "location": "Praha 4",
+            "subdistrict": "Modřany",
+            "developer": "IP Polná",
+            "status": "V prodeji",
+            "completion_year": 2028,
+            "avg_sqm_price": 134000,
+            "min_price": 4700000,
+            "max_price": 14800000,
+            "total_units": 151,
+            "available_units": 62,
+            "layouts": [
+                "1+kk",
+                "2+kk",
+                "3+kk",
+                "4+kk"
+            ],
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "id": "p4-hausmannova",
+            "title": "Rezidence Hausmannova",
+            "location": "Praha 4",
+            "subdistrict": "Modřany",
+            "developer": "Fetters",
+            "status": "V prodeji",
+            "completion_year": 2029,
+            "avg_sqm_price": 136500,
+            "min_price": 4950000,
+            "max_price": 15100000,
+            "total_units": 101,
+            "available_units": 48,
+            "layouts": [
+                "1+kk",
+                "2+kk",
+                "3+kk"
+            ],
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "id": "p4-barrandov",
+            "title": "Viladomy Barrandov",
+            "location": "Praha 4",
+            "subdistrict": "Hodkovičky",
+            "developer": "Finep",
+            "status": "V prodeji",
+            "completion_year": 2027,
+            "avg_sqm_price": 145000,
+            "min_price": 5500000,
+            "max_price": 16900000,
+            "total_units": 65,
+            "available_units": 21,
+            "layouts": [
+                "2+kk",
+                "3+kk",
+                "4+kk"
+            ],
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "id": "p4-arboret",
+            "title": "Arboret Krč",
+            "location": "Praha 4",
+            "subdistrict": "Krč",
+            "developer": "Skanska Residential",
+            "status": "V prodeji",
+            "completion_year": 2028,
+            "avg_sqm_price": 149000,
+            "min_price": 5300000,
+            "max_price": 17500000,
+            "total_units": 140,
+            "available_units": 38,
+            "layouts": [
+                "1+kk",
+                "2+kk",
+                "3+kk",
+                "4+kk"
+            ],
+            "url": "https://www.novostavby.com/"
+        },
         {
             "id": "p10-zahradak",
             "title": "Za.hraďák",
             "location": "Praha 10",
-            "subdistrict": "Zahradní Město / Strašnice",
+            "subdistrict": "Zahradní Město",
             "developer": "Sekyra Group",
             "status": "V prodeji",
             "completion_year": 2027,
@@ -112,84 +276,22 @@
             "url": "https://www.novostavby.com/"
         },
         {
-            "id": "p4-druruzstevni",
-            "title": "Družstevní 5",
-            "location": "Praha 4",
-            "subdistrict": "Nusle",
-            "developer": "PSN",
-            "status": "V prodeji",
-            "completion_year": 2028,
-            "avg_sqm_price": 152000,
-            "min_price": 5800000,
-            "max_price": 16200000,
-            "total_units": 32,
-            "available_units": 14,
-            "layouts": [
-                "1+kk",
-                "2+kk",
-                "3+kk"
-            ],
-            "url": "https://www.novostavby.com/"
-        },
-        {
-            "id": "p4-modranska",
-            "title": "Modřanská Zahrada",
-            "location": "Praha 4",
-            "subdistrict": "Modřany",
-            "developer": "IP Polná",
-            "status": "V prodeji",
-            "completion_year": 2028,
-            "avg_sqm_price": 134000,
-            "min_price": 4700000,
-            "max_price": 14800000,
-            "total_units": 151,
-            "available_units": 62,
-            "layouts": [
-                "1+kk",
-                "2+kk",
-                "3+kk",
-                "4+kk"
-            ],
-            "url": "https://www.novostavby.com/"
-        },
-        {
-            "id": "p4-hausmannova",
-            "title": "Rezidence Hausmannova",
-            "location": "Praha 4",
-            "subdistrict": "Modřany",
-            "developer": "Fetters",
-            "status": "V prodeji",
-            "completion_year": 2029,
-            "avg_sqm_price": 136500,
-            "min_price": 4950000,
-            "max_price": 15100000,
-            "total_units": 101,
-            "available_units": 48,
-            "layouts": [
-                "1+kk",
-                "2+kk",
-                "3+kk"
-            ],
-            "url": "https://www.novostavby.com/"
-        },
-        {
-            "id": "p3-hartigova",
-            "title": "HARTIGOVA 114",
-            "location": "Praha 3",
-            "subdistrict": "Žižkov",
-            "developer": "Crestyl",
+            "id": "p10-habitat",
+            "title": "Habitat Hostivař",
+            "location": "Praha 10",
+            "subdistrict": "Hostivař",
+            "developer": "Horizon Holding",
             "status": "V prodeji",
             "completion_year": 2027,
-            "avg_sqm_price": 169000,
-            "min_price": 6800000,
-            "max_price": 22500000,
-            "total_units": 84,
-            "available_units": 29,
+            "avg_sqm_price": 136000,
+            "min_price": 4800000,
+            "max_price": 14200000,
+            "total_units": 90,
+            "available_units": 27,
             "layouts": [
                 "1+kk",
                 "2+kk",
-                "3+kk",
-                "4+kk"
+                "3+kk"
             ],
             "url": "https://www.novostavby.com/"
         },
@@ -210,6 +312,27 @@
                 "1+kk",
                 "2+kk",
                 "3+kk"
+            ],
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "id": "p12-modrany-residence",
+            "title": "Panorama Modřany",
+            "location": "Praha 12",
+            "subdistrict": "Modřany",
+            "developer": " Trigema",
+            "status": "V prodeji",
+            "completion_year": 2028,
+            "avg_sqm_price": 139000,
+            "min_price": 5100000,
+            "max_price": 16100000,
+            "total_units": 115,
+            "available_units": 44,
+            "layouts": [
+                "1+kk",
+                "2+kk",
+                "3+kk",
+                "4+kk"
             ],
             "url": "https://www.novostavby.com/"
         }
