@@ -1,0 +1,52 @@
+{
+    "status": "success",
+    "target_locations": [
+        "Praha 3",
+        "Praha 4",
+        "Praha 10",
+        "Praha 12"
+    ],
+    "items_found": 8,
+    "data": [
+        {
+            "title": "Za.hraďák",
+            "location": "Praha 10",
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "title": "NOOK Strašnice",
+            "location": "Praha 10",
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "title": "ELEMENT Malešice",
+            "location": "Praha 10",
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "title": "Vršovická 44",
+            "location": "Praha 10",
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "title": "Metropolis Tower",
+            "location": "Praha 10",
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "title": "Družstevní 5",
+            "location": "Praha 4",
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "title": "Modřanská Zahrada",
+            "location": "Praha 4",
+            "url": "https://www.novostavby.com/"
+        },
+        {
+            "title": "HARTIGOVA 114",
+            "location": "Praha 3",
+            "url": "https://www.novostavby.com/"
+        }
+    ]
+}
