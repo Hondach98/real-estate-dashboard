@@ -1,31 +1,42 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="cs" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reality Dashboard | Praha 3, 4, 10, 12</title>
+  <title>Real Estate Analytics | Praha 3, 4, 10, 12</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen">
 
-  <!-- Header -->
-  <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3">
-        <div class="p-2 bg-indigo-600 rounded-lg font-bold text-xl">🏢</div>
+        <div class="p-2 bg-brand-600 rounded-lg text-white font-black text-xl tracking-wider">RE</div>
         <div>
-          <h1 class="text-xl font-bold tracking-tight">Reality Dashboard</h1>
-          <p class="text-xs text-slate-400">Přehled novostaveb: Praha 3, 4, 10, 12</p>
+          <h1 class="text-lg font-bold tracking-tight text-white">Prague Housing Intelligence</h1>
+          <p class="text-xs text-slate-400">Monitoring novostaveb: Praha 3 • Praha 4 • Praha 10 • Praha 12</p>
         </div>
       </div>
 
-      <!-- Vyhledávání a Filtry -->
-      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-         type="text" id="searchInput" placeholder="Hledat projekt nebo developera..." 
-               class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm w-full md:w-64 focus:outline-none focus:border-indigo-500">
+      <div class="flex items-center gap-3 w-full md:w-auto">
+        <input type="text" id="searchInput" placeholder="Hledat projekt, developer..." 
+               class="bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-xs w-full md:w-64 focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-200">
         
-        <select id="locationFilter" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-500">
-          <option value="ALL">Všechny lokality</option>
+        <select id="locationFilter" class="bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-200">
+          <option value="ALL">Všechny městské části</option>
           <option value="Praha 3">Praha 3</option>
           <option value="Praha 4">Praha 4</option>
           <option value="Praha 10">Praha 10</option>
@@ -35,85 +46,208 @@
     </div>
   </header>
 
-  <!-- Hlavní obsah -->
-  <main class="max-w-7xl mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-lg font-semibold text-slate-300">Nalezené projekty (<span id="projectCount">0</span>)</h2>
-      <span class="text-xs text-slate-500" id="lastUpdated">Aktualiáno: Dnes</span>
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
+        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Průměrná cena / m²</p>
+        <h3 class="text-2xl font-extrabold text-white mt-1" id="kpiAvgSqm">— Kč</h3>
+        <p class="text-[11px] text-emerald-400 mt-2 font-medium">Průměr sledovaných MČ</p>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
+        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Aktivní projekty</p>
+        <h3 class="text-2xl font-extrabold text-white mt-1" id="kpiProjectCount">0</h3>
+        <p class="text-[11px] text-slate-400 mt-2">Sledované projekty</p>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
+        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Volné jednotky</p>
+        <h3 class="text-2xl font-extrabold text-brand-500 mt-1" id="kpiAvailableUnits">0</h3>
+        <p class="text-[11px] text-slate-400 mt-2">Aktuálně k dispozici</p>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
+        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Min. Vstupní cena</p>
+        <h3 class="text-2xl font-extrabold text-white mt-1" id="kpiMinPrice">— mil. Kč</h3>
+        <p class="text-[11px] text-slate-400 mt-2">Nejdostupnější byt</p>
+      </div>
     </div>
 
-    <!-- Mřížka karet -->
-    <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Sem se dynamicky načtou kachle -->
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-xl">
+        <h3 class="text-sm font-semibold text-slate-200 mb-4">Průměrná cena Kč/m² podle MČ</h3>
+        <div class="h-64">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-xl">
+        <h3 class="text-sm font-semibold text-slate-200 mb-4">Počet volných jednotek v projektech</h3>
+        <div class="h-64">
+          <canvas id="unitsChart"></canvas>
+        </div>
+      </div>
     </div>
+
+    <!-- Table -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden">
+      <div class="p-5 border-b border-slate-800">
+        <h2 class="text-base font-bold text-white">Srovnávací matice developerských projektů</h2>
+        <p class="text-xs text-slate-400">Kliknutím na záhlaví sloupce seřadíte data</p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-950 text-slate-400 uppercase tracking-wider border-b border-slate-800 select-none">
+            <tr>
+              <th class="p-4 font-semibold cursor-pointer hover:text-white" onclick="sortTable('title')">Projekt ↕</th>
+              <th class="p-4 font-semibold cursor-pointer hover:text-white" onclick="sortTable('location')">Lokalita ↕</th>
+              <th class="p-4 font-semibold cursor-pointer hover:text-white" onclick="sortTable('developer')">Developer ↕</th>
+              <th class="p-4 font-semibold cursor-pointer hover:text-white text-right" onclick="sortTable('avg_sqm_price')">Cena / m² ↕</th>
+              <th class="p-4 font-semibold cursor-pointer hover:text-white text-right" onclick="sortTable('min_price')">Od (Kč) ↕</th>
+              <th class="p-4 font-semibold cursor-pointer hover:text-white text-center" onclick="sortTable('available_units')">Volné / Celkem ↕</th>
+              <th class="p-4 font-semibold text-center">Dokončení</th>
+              <th class="p-4 font-semibold text-right">Odkaz</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-slate-800/60 font-mono">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </main>
 
   <script>
-    let projectsData = [];
+    let rawData = [];
+    let filteredData = [];
+    let sortKey = 'avg_sqm_price';
+    let sortAsc = true;
+    let priceChartInstance = null;
+    let unitsChartInstance = null;
 
-    async function loadData() {
+    async function init() {
       try {
-        const response = await fetch('data/projects.json');
-        const json = await response.json();
-        projectsData = json.data || [];
-        renderProjects(projectsData);
-      } catch (err) {
-        console.error('Chyba při načítání dat:', err);
-        document.getElementById('projectsGrid').innerHTML = '<p class="text-red-400 col-span-full">Chyba při načítání dat z JSONu.</p>';
+        const res = await fetch('data/projects.json');
+        const json = await res.json();
+        rawData = json.data || [];
+        filteredData = [...rawData];
+        renderDashboard();
+      } catch (e) {
+        console.error("Chyba při načítání JSON:", e);
       }
     }
 
-    function renderProjects(items) {
-      const grid = document.getElementById('projectsGrid');
-      document.getElementById('projectCount').innerText = items.length;
+    function renderDashboard() {
+      updateKPIs();
+      renderTable();
+      renderCharts();
+    }
 
-      if (items.length === 0) {
-        grid.innerHTML = '<p class="text-slate-500 col-span-full text-center py-12">Žádné projekdanému filtru.</p>';
-        return;
-      }
+    function updateKPIs() {
+      if (filteredData.length === 0) return;
+      const totalSqm = filteredData.reduce((acc, p) => acc + p.avg_sqm_price, 0);
+      const avgSqm = Math.round(totalSqm / filteredData.length);
+      const totalUnits = filteredData.reduce((acc, p) => acc + p.available_units, 0);
+      const minPrice = Math.min(...filteredData.map(p => p.min_price));
 
-      grid.innerHTML = items.map(p => `
-        <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-5 hover:border-indigo-500/50 transition duration-200 flex flex-col justify-between">
-          <div>
-            <div class="flex justify-between items-start gap-2 mb-2">
-              <span class="px-2 py-0.5 text-xs font-semibold rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                ${p.location}
-              </span>
-              <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                ${p.status || 'V prodeji'}
-              </span>
-            </div>
-            <h3 class="text-lg font-bold text-slate-100 mb-1">${p.title}</h3>
-            <p class="text-xs text-slate-400 mb-4">Developer: <span class="text-slate-200">${p.developer || 'Nespecifikováno'}</span></p>
-          </div>
+      document.getElementById('kpiAvgSqm').innerText = avgSqm.toLocaleString('cs-CZ') + ' Kč';
+      document.getElementById('kpiProjectCount').innerText = filteredData.length;
+      document.getElementById('kpiAvailableUnits').innerText = totalUnits;
+      document.getElementById('kpiMinPrice').innerText = (minPrice / 1000000).toFixed(2) + ' mil. Kč';
+    }
 
-          <div class="border-t border-slate-700/50 pt-3 mt-2 flejustify-between items-center text-xs text-slate-400">
-            <span>Jednotky: <strong class="text-slate-200">${p.units || 'N/A'}</strong></span>
-            <a href="${p.url}" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1">
-              Detail ↗
-            </a>
-          </div>
-        </div>
+    function renderTable() {
+      const tbody = document.getElementById('tableBody');
+      filteredData.sort((a, b) => {
+        let valA = a[sortKey], valB = b[sortKey];
+        if (typeof valA === 'string') return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        return sortAsc ? valA - valB : valB - valA;
+      });
+
+      tbody.innerHTML = filteredData.map(p => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="p-4 font-bold text-white font-sans">${p.title}</td>
+          <td class="p-4 font-sans"><span class="px-2 py-0.5 rounded text-[11px] bg-slate-800 text-slate-300 border border-slate-700">${p.location}</span></td>
+          <td class="p-4 font-sans text-slate-400">${p.developer}</td>
+          <td class="p-4 text-right font-bold text-brand-500">${p.avg_sqm_price.toLocaleString('cs-CZ')} Kč</td>
+          <td class="p-4 text-right">${(p.min_price / 1000000).toFixed(2)} mil.</td>
+          <td class="p-4 text-center"><span class="text-emerald-400 font-bold">${p.available_units}</span> / ${p.total_units}</td>
+          <td class="p-4 text-center font-sans text-slate-400">${p.completion_year}</td>
+          <td class="p-4 text-right font-sans">
+            <a href="${p.url}" target="_blank" class="text-brand-500 hover:text-brand-400 font-medium">Detail ↗</a>
+          </td>
+        </tr>
       `).join('');
     }
 
-    function filterData() {
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      const loc = document.getElementById('locationFilter').value;
-
-      const filtered = projectsData.filter(p => {
-        const matchesSearch = p.title.toLowerCase().includes(search) || (p.developer && p.developer.toLowerCase().includes(search));
-        const matchesLoc = loc === 'ALL' || p.location === loc;
-        return matchesSearch && matchesLoc;
+    function renderCharts() {
+      const locMap = {};
+      filteredData.forEach(p => {
+        if (!locMap[p.location]) locMap[p.location] = { totalSqm: 0, count: 0, units: 0 };
+        locMap[p.location].totalSqm += p.avg_sqm_price;
+        locMap[p.location].count += 1;
+        locMap[p.location].units += p.available_units;
       });
 
-      renderProjects(filtered);
+      const labels = Object.keys(locMap);
+      const avgPrices = labels.map(l => Math.round(locMap[l].totalSqm / locMap[l].count));
+      const unitsData = labels.map(l => locMap[l].units);
+
+      if (priceChartInstance) priceChartInstance.destroy();
+      const ctx1 = document.getElementById('priceChart').getContext('2d');
+      priceChartInstance = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{ label: 'Průměrná cena Kč/m²', data: avgPrices, backgroundColor: '#3b82f6', borderRadius: 6 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } }, x: { ticks: { color: '#94a3b8' }, grid: { display: false } } }
+        }
+      });
+
+      if (unitsChartInstance) unitsChartInstance.destroy();
+      const ctx2 = document.getElementById('unitsChart').getContext('2d');
+      unitsChartInstance = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{ data: unitsData, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'] }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } }
+        }
+      });
     }
 
-    document.getElementById('searchInput').addEventListener('input', filterData);
-    document.getElementById('locationFilter.addEventListener('change', filterData);
+    function sortTable(key) {
+      if (sortKey === key) { sortAsc = !sortAsc; } else { sortKey = key; sortAsc = true; }
+      renderTable();
+    }
 
-    loadData();
+    function applyFilters() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const loc = document.getElementById('locationFilter').value;
+      filteredData = rawData.filter(p => {
+        const matchSearch = p.title.toLowerCase().includes(search) || p.developer.toLowerCase().includes(search);
+        const matchLoc = loc === 'ALL' || p.location === loc;
+        return matchSearch && matchLoc;
+      });
+      renderDashboard();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('locationFilter').addEventListener('change', applyFilters);
+
+    init();
   </script>
 </body>
 </html>
+
